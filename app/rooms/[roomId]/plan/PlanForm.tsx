@@ -14,7 +14,7 @@ type ExistingPlan = {
   minWorkoutDaysPerWeek: number | null;
   minLoggingDaysPerWeek: number | null;
   version: number;
-} | null;
+} | null | undefined;
 
 export default function PlanForm({
   roomId,
