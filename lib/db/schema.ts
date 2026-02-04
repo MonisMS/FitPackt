@@ -45,6 +45,13 @@ export const workoutTypeEnum = pgEnum('workout_type', [
   'other'
 ]);
 
+export const aiSummaryTypeEnum = pgEnum('ai_summary_type', [
+  'onboarding',
+  'progress_check',
+  'goal_adjustment',
+  'weekly_review'
+]);
+
 // Users table
 export const users = pgTable('users', {
   id: varchar('id', { length: 255 }).primaryKey(), // Clerk user ID
@@ -111,6 +118,17 @@ export const plans = pgTable('plans', {
   checkLoggingDays: check('valid_logging_days', sql`min_logging_days_per_week >= 1 AND min_logging_days_per_week <= 7`)
 }));
 
+// AI Summaries table (for future AI integration)
+export const aiSummaries = pgTable('ai_summaries', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: varchar('user_id', { length: 255 }).notNull().references(() => users.id, { onDelete: 'cascade' }),
+  summaryType: aiSummaryTypeEnum('summary_type').notNull(),
+  prompt: text('prompt').notNull(), // What we asked the AI
+  response: text('response').notNull(), // AI's response
+  metadata: text('metadata'), // JSON string with extracted key details for context
+  createdAt: timestamp('created_at').defaultNow().notNull()
+});
+
 // Daily logs table
 export const dailyLogs = pgTable('daily_logs', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -148,7 +166,15 @@ export const dailyLogs = pgTable('daily_logs', {
 export const usersRelations = relations(users, ({ many }) => ({
   memberships: many(roomMemberships),
   logs: many(dailyLogs),
-  planUpdates: many(plans)
+  planUpdates: many(plans),
+  aiSummaries: many(aiSummaries)
+}));
+
+export const aiSummariesRelations = relations(aiSummaries, ({ one }) => ({
+  user: one(users, {
+    fields: [aiSummaries.userId],
+    references: [users.id]
+  })
 }));
 
 export const roomsRelations = relations(rooms, ({ many, one }) => ({

@@ -7,3 +7,4 @@ export { Modal, ModalFooter, type ModalProps, type ModalFooterProps } from './Mo
 export { Select, type SelectProps } from './Select';
 export { Textarea, type TextareaProps } from './Textarea';
 export { Alert, type AlertProps } from './Alert';
+export { Accordion, type AccordionItemData } from './Accordion';

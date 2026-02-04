@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { joinRoom } from './actions';
+import { Button, Card, Alert, Badge } from '@/components/ui';
+import { Users, Calendar, Clock, UserPlus, AlertCircle } from 'lucide-react';
 
 type Room = {
   id: string;
@@ -40,74 +42,102 @@ export default function JoinRoomForm({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-8">
-      <h1 className="text-3xl font-bold mb-2">You've been invited!</h1>
-      <p className="text-gray-600 mb-8">
-        Join <span className="font-semibold">{room.name}</span> to start tracking together
-      </p>
+    <div className="bg-white rounded-lg shadow-md p-6 lg:p-8">
+      <div className="animate-slide-up">
+        <h1 className="text-3xl md:text-4xl font-bold text-neutral-950 mb-2">You've been invited!</h1>
+        <p className="text-neutral-600 mb-8">
+          Join <span className="font-semibold text-neutral-950">{room.name}</span> to start tracking together
+        </p>
+      </div>
 
-      {/* Room Details */}
-      <div className="bg-gray-50 rounded-lg p-6 mb-6">
-        <h3 className="font-semibold mb-4">Room Details</h3>
-        <div className="space-y-3 text-sm">
-          <div className="flex justify-between">
-            <span className="text-gray-600">Room Name</span>
-            <span className="font-medium">{room.name}</span>
+      {/* Room Details Card */}
+      <Card variant="default" padding="lg" className="mb-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-neutral-950">Room Details</h3>
+          <Badge variant="neutral">
+            <Users size={14} />
+            {memberCount} / 5 members
+          </Badge>
+        </div>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between py-2 border-b border-neutral-100">
+            <span className="text-sm text-neutral-600">Duration</span>
+            <span className="text-sm font-medium text-neutral-950 flex items-center gap-1">
+              <Calendar size={14} />
+              {room.durationDays} days
+            </span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Duration</span>
-            <span className="font-medium">{room.durationDays} days</span>
+          <div className="flex items-center justify-between py-2 border-b border-neutral-100">
+            <span className="text-sm text-neutral-600">Daily Deadline</span>
+            <span className="text-sm font-medium text-neutral-950 flex items-center gap-1">
+              <Clock size={14} />
+              {room.deadlineTime.slice(0, 5)} IST
+            </span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Daily Deadline</span>
-            <span className="font-medium">{room.deadlineTime.slice(0, 5)} IST</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Current Members</span>
-            <span className="font-medium">{memberCount} / 5</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">Start Date</span>
-            <span className="font-medium">
+          <div className="flex items-center justify-between py-2 border-b border-neutral-100">
+            <span className="text-sm text-neutral-600">Start Date</span>
+            <span className="text-sm font-medium text-neutral-950">
               {new Date(room.startDate).toLocaleDateString()}
             </span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-gray-600">End Date</span>
-            <span className="font-medium">
+          <div className="flex items-center justify-between py-2">
+            <span className="text-sm text-neutral-600">End Date</span>
+            <span className="text-sm font-medium text-neutral-950">
               {new Date(room.endDate).toLocaleDateString()}
             </span>
           </div>
         </div>
-      </div>
+      </Card>
 
-      {/* What to expect */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-        <h4 className="font-medium text-blue-900 mb-2">What happens when you join?</h4>
-        <ul className="text-sm text-blue-800 space-y-1">
-          <li>• You'll need to log daily before {room.deadlineTime.slice(0, 5)} IST</li>
-          <li>• All members can see each other's logs</li>
-          <li>• Missed days will be visible to everyone</li>
-          <li>• You cannot leave once you join</li>
-          <li>• Your logs will be saved permanently</li>
-        </ul>
+      {/* Commitment Alert */}
+      <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <Alert variant="warning" title="Commitment Required">
+          <ul className="text-sm space-y-1.5 mt-2">
+            <li className="flex items-start gap-2">
+              <span className="text-neutral-500">•</span>
+              <span>Log daily before {room.deadlineTime.slice(0, 5)} IST</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-neutral-500">•</span>
+              <span>All members can see each other's logs</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-neutral-500">•</span>
+              <span>Missed days will be visible to everyone</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-neutral-500">•</span>
+              <span>You cannot leave once you join</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-neutral-500">•</span>
+              <span>Your logs will be saved permanently</span>
+            </li>
+          </ul>
+        </Alert>
       </div>
 
       {/* Actions */}
-      <div className="flex gap-3">
-        <button
+      <div className="flex gap-3 mt-6 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+        <Button
+          variant="secondary"
+          size="lg"
+          className="flex-1"
           onClick={() => router.push('/dashboard')}
-          className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition"
         >
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="primary"
+          size="lg"
+          className="flex-1"
           onClick={handleJoin}
           disabled={loading}
-          className="flex-1 bg-black text-white py-3 rounded-lg font-medium disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-gray-800 transition"
+          loading={loading}
         >
-          {loading ? 'Joining...' : 'Join Room'}
-        </button>
+          <UserPlus size={20} />
+          Join Room
+        </Button>
       </div>
     </div>
   );

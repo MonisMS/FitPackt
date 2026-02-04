@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Button, Input, Alert } from '@/components/ui';
+import { Link2, HelpCircle } from 'lucide-react';
 
 export default function JoinRoomInput() {
   const router = useRouter();
@@ -13,7 +15,6 @@ export default function JoinRoomInput() {
     setError('');
 
     try {
-      // Extract token from URL
       const url = new URL(inviteLink);
       const pathParts = url.pathname.split('/');
       const token = pathParts[pathParts.length - 1];
@@ -30,13 +31,11 @@ export default function JoinRoomInput() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6">
+    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 lg:p-8">
       <div className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Invite Link
-          </label>
-          <input
+        <div className="animate-slide-up">
+          <Input
+            label="Invite Link"
             type="text"
             value={inviteLink}
             onChange={(e) => {
@@ -44,37 +43,46 @@ export default function JoinRoomInput() {
               setError('');
             }}
             placeholder="https://example.com/rooms/join/abc123..."
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
             required
+            error={error}
+            helperText={!error ? "Paste the invite link you received from a room creator" : undefined}
+            leftIcon={<Link2 size={18} />}
           />
-          {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
-          <p className="text-sm text-gray-500 mt-2">
-            Paste the invite link you received from a room creator
-          </p>
         </div>
 
-        <div className="bg-gray-50 rounded-lg p-4">
-          <h4 className="font-medium mb-2">Don't have an invite link?</h4>
-          <p className="text-sm text-gray-600">
-            Ask a friend who created a room to share their invite link with you, or create your own room.
-          </p>
+        <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <Alert variant="info">
+            <div className="flex items-start gap-2">
+              <HelpCircle size={18} className="flex-shrink-0 mt-0.5" />
+              <div>
+                <h4 className="font-medium mb-1">Don't have an invite link?</h4>
+                <p className="text-sm">
+                  Ask a friend who created a room to share their invite link with you, or create your own room.
+                </p>
+              </div>
+            </div>
+          </Alert>
         </div>
 
-        <div className="flex gap-3">
-          <button
+        <div className="flex gap-3 pt-4">
+          <Button
             type="button"
+            variant="secondary"
+            size="lg"
+            className="flex-1"
             onClick={() => router.back()}
-            className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
+            variant="primary"
+            size="lg"
+            className="flex-1"
             disabled={!inviteLink.trim()}
-            className="flex-1 bg-black text-white py-3 rounded-lg font-medium disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-gray-800 transition"
           >
             Continue
-          </button>
+          </Button>
         </div>
       </div>
     </form>

@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { savePlan } from './actions';
+import { Button, Textarea, Alert } from '@/components/ui';
+import { Target, TrendingUp, Flag, Save, AlertCircle } from 'lucide-react';
 
 type ExistingPlan = {
   id: string;
@@ -67,104 +69,111 @@ export default function PlanForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-8">
+    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 lg:p-8 space-y-8">
+      {/* Auto-save indicator */}
+      {hasChanges && !isReadOnly && (
+        <Alert variant="warning">
+          <div className="flex items-center gap-2">
+            <AlertCircle size={18} />
+            <span className="text-sm">You have unsaved changes</span>
+          </div>
+        </Alert>
+      )}
+
       {/* Expectations */}
-      <section>
-        <div className="mb-2">
-          <h2 className="text-xl font-bold">Expectations</h2>
-          <p className="text-sm text-gray-600">What results are expected?</p>
+      <section className="animate-slide-up">
+        <div className="flex items-center gap-2 mb-4">
+          <Target size={20} className="text-neutral-600" />
+          <div>
+            <h2 className="text-xl font-semibold text-neutral-950">Expectations</h2>
+            <p className="text-sm text-neutral-600">What results are expected?</p>
+          </div>
         </div>
-        <textarea
+        <Textarea
           value={data.expectations}
           onChange={(e) => updateData('expectations', e.target.value)}
           placeholder="e.g., Lose 5kg, build consistency, feel more energetic..."
           rows={4}
           maxLength={1000}
           disabled={isReadOnly}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+          showCharCount={true}
         />
-        <p className="text-xs text-gray-500 mt-1">
-          {data.expectations.length}/1000 characters
-        </p>
       </section>
 
       {/* Strategy */}
-      <section>
-        <div className="mb-2">
-          <h2 className="text-xl font-bold">Strategy</h2>
-          <p className="text-sm text-gray-600">How will training and eating be approached?</p>
+      <section className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
+        <div className="flex items-center gap-2 mb-4">
+          <TrendingUp size={20} className="text-neutral-600" />
+          <div>
+            <h2 className="text-xl font-semibold text-neutral-950">Strategy</h2>
+            <p className="text-sm text-neutral-600">How will training and eating be approached?</p>
+          </div>
         </div>
-        <textarea
+        <Textarea
           value={data.strategy}
           onChange={(e) => updateData('strategy', e.target.value)}
           placeholder="e.g., Gym 4x/week (PPL split), high protein diet, no junk food after 8pm..."
-          rows={5}
+          rows={4}
           maxLength={1000}
           disabled={isReadOnly}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+          showCharCount={true}
         />
-        <p className="text-xs text-gray-500 mt-1">
-          {data.strategy.length}/1000 characters
-        </p>
       </section>
 
       {/* Targets */}
-      <section>
-        <div className="mb-2">
-          <h2 className="text-xl font-bold">Targets</h2>
-          <p className="text-sm text-gray-600">Measurable outcomes</p>
+      <section className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <div className="flex items-center gap-2 mb-4">
+          <Flag size={20} className="text-neutral-600" />
+          <div>
+            <h2 className="text-xl font-semibold text-neutral-950">Specific Targets</h2>
+            <p className="text-sm text-neutral-600">Measurable goals for this challenge</p>
+          </div>
         </div>
-        <textarea
+        <Textarea
           value={data.targets}
           onChange={(e) => updateData('targets', e.target.value)}
-          placeholder="e.g., Target weight: 75kg, Bench press: 80kg, Run 5km under 30min..."
+          placeholder="e.g., Bench press 80kg, waist size 32 inches, run 5K in under 30 min..."
           rows={4}
-          maxLength={500}
+          maxLength={1000}
           disabled={isReadOnly}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+          showCharCount={true}
         />
-        <p className="text-xs text-gray-500 mt-1">{data.targets.length}/500 characters</p>
       </section>
 
-      {/* Non-Negotiables */}
-      <section>
-        <div className="mb-4">
-          <h2 className="text-xl font-bold">Non-Negotiables</h2>
-          <p className="text-sm text-gray-600">Minimum commitments</p>
-        </div>
-
-        <div className="space-y-4">
+      {/* Minimums */}
+      <section className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
+        <h2 className="text-xl font-semibold text-neutral-950 mb-4">Minimum Requirements</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Minimum workout days per week
+            <label className="block text-sm font-medium text-neutral-700 mb-2">
+              Min Workout Days / Week
             </label>
             <select
               value={data.minWorkoutDaysPerWeek}
               onChange={(e) => updateData('minWorkoutDaysPerWeek', e.target.value)}
               disabled={isReadOnly}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className="w-full px-4 py-2.5 bg-white text-neutral-950 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150"
             >
-              {[0, 1, 2, 3, 4, 5, 6, 7].map((days) => (
-                <option key={days} value={days}>
-                  {days} {days === 1 ? 'day' : 'days'} per week
+              {[0, 1, 2, 3, 4, 5, 6, 7].map((n) => (
+                <option key={n} value={n}>
+                  {n} day{n !== 1 ? 's' : ''}
                 </option>
               ))}
             </select>
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Minimum logging days per week
+            <label className="block text-sm font-medium text-neutral-700 mb-2">
+              Min Logging Days / Week
             </label>
             <select
               value={data.minLoggingDaysPerWeek}
               onChange={(e) => updateData('minLoggingDaysPerWeek', e.target.value)}
               disabled={isReadOnly}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className="w-full px-4 py-2.5 bg-white text-neutral-950 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150"
             >
-              {[1, 2, 3, 4, 5, 6, 7].map((days) => (
-                <option key={days} value={days}>
-                  {days} {days === 1 ? 'day' : 'days'} per week
+              {[0, 1, 2, 3, 4, 5, 6, 7].map((n) => (
+                <option key={n} value={n}>
+                  {n} day{n !== 1 ? 's' : ''}
                 </option>
               ))}
             </select>
@@ -172,46 +181,26 @@ export default function PlanForm({
         </div>
       </section>
 
-      {/* Info */}
-      {!existingPlan && !isReadOnly && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <p className="text-sm text-blue-800">
-            <strong>Note:</strong> All members can edit this plan. Changes are tracked with
-            versions.
-          </p>
-        </div>
-      )}
-
-      {/* Actions */}
+      {/* Submit */}
       {!isReadOnly && (
-        <div className="flex gap-3 pt-4 border-t">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition"
-          >
-            Cancel
-          </button>
-          <button
+        <div className="flex justify-end pt-4 border-t border-neutral-200">
+          <Button
             type="submit"
+            variant="primary"
+            size="lg"
             disabled={loading || !hasChanges}
-            className="flex-1 bg-black text-white py-3 rounded-lg font-medium disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-gray-800 transition"
+            loading={loading}
           >
-            {loading ? 'Saving...' : existingPlan ? 'Update Plan' : 'Save Plan'}
-          </button>
+            <Save size={20} />
+            Save Plan
+          </Button>
         </div>
       )}
 
       {isReadOnly && (
-        <div className="pt-4 border-t">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition"
-          >
-            Back to Room
-          </button>
-        </div>
+        <Alert variant="info">
+          <span className="text-sm">This plan is read-only. Only room members can edit.</span>
+        </Alert>
       )}
     </form>
   );

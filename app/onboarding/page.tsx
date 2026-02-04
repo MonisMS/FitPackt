@@ -1,12 +1,54 @@
 import { redirect } from 'next/navigation';
-import { getCurrentUser } from '@/lib/auth';
+import { auth, currentUser } from '@clerk/nextjs/server';
+import { db } from '@/lib/db';
+import { users } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
 import OnboardingForm from './OnboardingForm';
 
 export default async function OnboardingPage() {
-  const user = await getCurrentUser();
+  const { userId } = await auth();
 
-  if (!user) {
+  if (!userId) {
     redirect('/sign-in');
+  }
+
+  // Check if user exists in database
+  let user = await db.query.users.findFirst({
+    where: eq(users.id, userId),
+  });
+
+  // If user doesn't exist in database, create them
+  if (!user) {
+    const clerkUser = await currentUser();
+
+    if (!clerkUser) {
+      redirect('/sign-in');
+    }
+
+    const email = clerkUser.emailAddresses[0]?.emailAddress;
+
+    if (!email) {
+      return <div>Error: No email found</div>;
+    }
+
+    // Create user in database
+    await db.insert(users).values({
+      id: userId,
+      email: email,
+      name: clerkUser.firstName && clerkUser.lastName
+        ? `${clerkUser.firstName} ${clerkUser.lastName}`.trim()
+        : clerkUser.firstName || 'User',
+      onboarded: false,
+    });
+
+    // Fetch the newly created user
+    user = await db.query.users.findFirst({
+      where: eq(users.id, userId),
+    });
+
+    if (!user) {
+      return <div>Error: Failed to create user</div>;
+    }
   }
 
   // If already onboarded, redirect to dashboard
@@ -14,11 +56,5 @@ export default async function OnboardingPage() {
     redirect('/dashboard');
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-md mx-auto">
-        <OnboardingForm userId={user.id} />
-      </div>
-    </div>
-  );
+  return <OnboardingForm userId={user.id} />;
 }

@@ -42,24 +42,24 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-neutral-950">
       {/* Sticky Header with Blur Backdrop */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-neutral-200">
+      <header className="sticky top-0 z-40 bg-neutral-900/80 backdrop-blur-md border-b border-neutral-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <Link href="/dashboard" className="text-2xl font-bold text-neutral-950 hover:opacity-70 transition-opacity">
+            <Link href="/dashboard" className="text-2xl font-bold text-white hover:opacity-70 transition-opacity">
               FitChallenge
             </Link>
             <div className="flex items-center gap-4">
               <Link
                 href="/timeline"
-                className="text-sm font-medium text-neutral-600 hover:text-neutral-950 transition-colors"
+                className="text-sm font-medium text-neutral-400 hover:text-white transition-colors"
               >
                 Timeline
               </Link>
               <Link
                 href="/settings"
-                className="text-sm font-medium text-neutral-600 hover:text-neutral-950 transition-colors"
+                className="text-sm font-medium text-neutral-400 hover:text-white transition-colors"
               >
                 Settings
               </Link>
@@ -72,10 +72,10 @@ export default async function DashboardPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Personalized Welcome */}
         <div className="mb-8 md:mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-neutral-950 mb-2 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 tracking-tight">
             {getGreeting()}, {user.name}!
           </h1>
-          <p className="text-lg text-neutral-600">
+          <p className="text-lg text-neutral-400">
             {activeRooms.length === 0
               ? "Ready to start your accountability journey?"
               : loggedToday
@@ -87,32 +87,32 @@ export default async function DashboardPage() {
         {/* Quick Action Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
           <Link href="/rooms/create" className="block group">
-            <div className="bg-white p-5 rounded-lg border border-neutral-200 hover:-translate-y-1 hover:shadow-lg transition-all duration-150 cursor-pointer">
+            <div className="bg-neutral-900/50 border border-neutral-800 p-5 rounded-xl hover:-translate-y-1 hover:shadow-lg hover:shadow-red-600/10 hover:border-red-600/50 transition-all duration-200 cursor-pointer">
               <div className="flex items-start gap-3">
-                <div className="p-2 bg-neutral-100 rounded-lg">
-                  <PlusCircle size={24} className="text-neutral-950" />
+                <div className="p-2 bg-red-600/10 rounded-lg border border-red-600/20">
+                  <PlusCircle size={24} className="text-red-600" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-neutral-950 mb-1">
+                  <h3 className="font-semibold text-white mb-1">
                     Create Room
                   </h3>
-                  <p className="text-xs text-neutral-500">Start a new challenge</p>
+                  <p className="text-sm text-neutral-500">Start a new challenge</p>
                 </div>
               </div>
             </div>
           </Link>
 
           <Link href="/rooms/join" className="block group">
-            <div className="bg-white p-5 rounded-lg border border-neutral-200 hover:-translate-y-1 hover:shadow-lg transition-all duration-150 cursor-pointer">
+            <div className="bg-neutral-900/50 border border-neutral-800 p-5 rounded-xl hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/10 hover:border-orange-500/50 transition-all duration-200 cursor-pointer">
               <div className="flex items-start gap-3">
-                <div className="p-2 bg-neutral-100 rounded-lg">
-                  <Users size={24} className="text-neutral-950" />
+                <div className="p-2 bg-orange-600/10 rounded-lg border border-orange-600/20">
+                  <Users size={24} className="text-orange-500" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-neutral-950 mb-1">
+                  <h3 className="font-semibold text-white mb-1">
                     Join Room
                   </h3>
-                  <p className="text-xs text-neutral-500">Enter with invite code</p>
+                  <p className="text-sm text-neutral-500">Enter with invite code</p>
                 </div>
               </div>
             </div>
@@ -120,16 +120,16 @@ export default async function DashboardPage() {
 
           {activeRooms.length > 0 && !loggedToday && (
             <Link href="/log" className="block group">
-              <div className="bg-red-50 p-5 rounded-lg border-2 border-red-600 hover:-translate-y-1 hover:shadow-lg transition-all duration-150 cursor-pointer">
+              <div className="bg-gradient-to-br from-red-600/20 to-orange-500/20 border-2 border-red-600 p-5 rounded-xl hover:-translate-y-1 hover:shadow-lg hover:shadow-red-600/20 transition-all duration-200 cursor-pointer">
                 <div className="flex items-start gap-3">
-                  <div className="p-2 bg-red-100 rounded-lg">
-                    <Edit3 size={24} className="text-red-600" />
+                  <div className="p-2 bg-red-600/20 rounded-lg border border-red-600/30">
+                    <Edit3 size={24} className="text-red-500" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-red-900 mb-1">
+                    <h3 className="font-semibold text-white mb-1">
                       Log Today
                     </h3>
-                    <p className="text-xs text-red-700">Complete your daily log</p>
+                    <p className="text-sm text-red-300">Complete your daily log</p>
                   </div>
                 </div>
               </div>
@@ -139,25 +139,25 @@ export default async function DashboardPage() {
 
         {/* Active Rooms */}
         <section className="mb-12">
-          <h2 className="text-2xl md:text-3xl font-semibold text-neutral-950 mb-6">
+          <h2 className="text-2xl md:text-3xl font-semibold text-white mb-6">
             Active Rooms ({activeRooms.length})
           </h2>
           {activeRooms.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-8 text-center">
+            <div className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-8 text-center">
               <div className="max-w-md mx-auto">
-                <h3 className="text-2xl font-semibold text-neutral-950 mb-3">No Active Rooms Yet</h3>
-                <p className="text-neutral-600 mb-6">
+                <h3 className="text-2xl font-semibold text-white mb-3">No Active Rooms Yet</h3>
+                <p className="text-neutral-400 mb-6">
                   Create your first accountability room or join an existing one to get started on your fitness journey.
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-3">
                   <Link href="/rooms/create">
-                    <Button variant="primary" size="lg">
+                    <Button className="bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white">
                       <PlusCircle size={20} />
                       Create a Room
                     </Button>
                   </Link>
                   <Link href="/rooms/join">
-                    <Button variant="secondary" size="lg">
+                    <Button className="!bg-neutral-800 !border-neutral-700 !text-white hover:!bg-neutral-700">
                       <Users size={20} />
                       Join a Room
                     </Button>
@@ -182,7 +182,7 @@ export default async function DashboardPage() {
         {/* Ended Rooms */}
         {endedRooms.length > 0 && (
           <section>
-            <h2 className="text-2xl md:text-3xl font-semibold text-neutral-950 mb-6">
+            <h2 className="text-2xl md:text-3xl font-semibold text-white mb-6">
               Past Rooms ({endedRooms.length})
             </h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

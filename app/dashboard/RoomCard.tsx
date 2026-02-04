@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { CircularProgress, Badge } from '@/components/ui';
 import { Calendar, CheckCircle, XCircle } from 'lucide-react';
@@ -28,22 +30,22 @@ export default function RoomCard({ room, hasLogged, isActive }: RoomCardProps) {
 
   // Color-coded left border
   const getBorderColor = () => {
-    if (!isActive) return 'border-neutral-300';
-    if (hasLogged) return 'border-green-600';
+    if (!isActive) return 'border-neutral-700';
+    if (hasLogged) return 'border-green-500';
     return 'border-red-600';
   };
 
   return (
     <Link href={`/rooms/${room.id}`} className="block group">
       <div
-        className={`bg-white rounded-lg border-l-4 border-neutral-200 shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all duration-150 p-5 h-full ${getBorderColor()}`}
+        className={`bg-neutral-900/50 backdrop-blur-sm rounded-xl border-l-4 border-r border-t border-b border-neutral-800 hover:-translate-y-1 hover:shadow-xl hover:shadow-red-600/10 transition-all duration-200 p-6 h-full ${getBorderColor()}`}
       >
         <div className="flex justify-between items-start mb-4">
           <div className="flex-1">
-            <h3 className="text-xl font-semibold text-neutral-950 mb-1">{room.name}</h3>
+            <h3 className="text-xl font-semibold text-white mb-1">{room.name}</h3>
             {isActive && (
-              <p className="text-xs text-neutral-500 flex items-center gap-1">
-                <Calendar size={12} />
+              <p className="text-sm text-neutral-400 flex items-center gap-1">
+                <Calendar size={14} />
                 Day {Math.min(daysPassed + 1, totalDays)} of {totalDays}
               </p>
             )}
@@ -68,8 +70,8 @@ export default function RoomCard({ room, hasLogged, isActive }: RoomCardProps) {
                 showLabel={true}
               />
               <div className="flex-1">
-                <p className="text-sm font-medium text-neutral-950 mb-1">Progress</p>
-                <p className="text-xs text-neutral-500">{daysRemaining} days remaining</p>
+                <p className="text-sm font-medium text-white mb-1">Progress</p>
+                <p className="text-sm text-neutral-400">{daysRemaining} days remaining</p>
               </div>
             </div>
 
@@ -79,7 +81,7 @@ export default function RoomCard({ room, hasLogged, isActive }: RoomCardProps) {
                   e.preventDefault();
                   window.location.href = `/log?roomId=${room.id}`;
                 }}
-                className="w-full bg-red-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-700 hover:to-orange-600 text-white py-3 px-4 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2"
               >
                 <XCircle size={16} />
                 Log Today
@@ -87,17 +89,17 @@ export default function RoomCard({ room, hasLogged, isActive }: RoomCardProps) {
             )}
 
             {hasLogged && (
-              <div className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-green-50 text-green-700">
+              <div className="flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-green-600/20 border border-green-600/30 text-green-400">
                 <CheckCircle size={16} />
-                <span className="text-sm font-medium">Logged for today</span>
+                <span className="text-sm font-semibold">Logged for today ✓</span>
               </div>
             )}
           </>
         )}
 
         {!isActive && (
-          <p className="text-xs text-neutral-500 flex items-center gap-1">
-            <Calendar size={12} />
+          <p className="text-sm text-neutral-400 flex items-center gap-1">
+            <Calendar size={14} />
             Ended on {endDate.toLocaleDateString()}
           </p>
         )}
