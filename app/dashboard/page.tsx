@@ -11,7 +11,7 @@ export default async function DashboardPage() {
   const user = await getCurrentUser();
 
   if (!user) {
-    redirect('/sign-in');
+    redirect('/onboarding');
   }
 
   if (!user.onboarded) {
