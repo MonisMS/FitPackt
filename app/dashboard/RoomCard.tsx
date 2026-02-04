@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { CircularProgress, Badge } from '@/components/ui';
+import { Calendar, CheckCircle, XCircle } from 'lucide-react';
 
 type Room = {
   id: string;
@@ -24,70 +26,82 @@ export default function RoomCard({ room, hasLogged, isActive }: RoomCardProps) {
   const daysPassed = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
   const daysRemaining = Math.max(0, Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
 
+  // Color-coded left border
+  const getBorderColor = () => {
+    if (!isActive) return 'border-neutral-300';
+    if (hasLogged) return 'border-green-600';
+    return 'border-red-600';
+  };
+
   return (
-    <Link
-      href={`/rooms/${room.id}`}
-      className="block bg-white rounded-lg shadow hover:shadow-md transition-shadow p-6"
-    >
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="font-semibold text-lg">{room.name}</h3>
+    <Link href={`/rooms/${room.id}`} className="block group">
+      <div
+        className={`bg-white rounded-lg border-l-4 border-neutral-200 shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all duration-150 p-5 h-full ${getBorderColor()}`}
+      >
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex-1">
+            <h3 className="text-xl font-semibold text-neutral-950 mb-1">{room.name}</h3>
+            {isActive && (
+              <p className="text-xs text-neutral-500 flex items-center gap-1">
+                <Calendar size={12} />
+                Day {Math.min(daysPassed + 1, totalDays)} of {totalDays}
+              </p>
+            )}
+          </div>
           {isActive && (
-            <p className="text-sm text-gray-600 mt-1">
-              Day {Math.min(daysPassed + 1, totalDays)} of {totalDays}
-            </p>
+            <Badge variant={hasLogged ? 'success' : 'error'} dot>
+              {hasLogged ? 'Logged' : 'Not Logged'}
+            </Badge>
           )}
+          {!isActive && <Badge variant="neutral">Ended</Badge>}
         </div>
+
         {isActive && (
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-            hasLogged
-              ? 'bg-green-100 text-green-800'
-              : 'bg-red-100 text-red-800'
-          }`}>
-            {hasLogged ? '✓ Logged' : 'Not logged'}
-          </span>
+          <>
+            <div className="flex items-center gap-4 mb-4">
+              <CircularProgress
+                value={daysPassed}
+                max={totalDays}
+                size={60}
+                strokeWidth={6}
+                variant={hasLogged ? 'success' : 'default'}
+                showLabel={true}
+              />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-neutral-950 mb-1">Progress</p>
+                <p className="text-xs text-neutral-500">{daysRemaining} days remaining</p>
+              </div>
+            </div>
+
+            {!hasLogged && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href = `/log?roomId=${room.id}`;
+                }}
+                className="w-full bg-red-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+              >
+                <XCircle size={16} />
+                Log Today
+              </button>
+            )}
+
+            {hasLogged && (
+              <div className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-green-50 text-green-700">
+                <CheckCircle size={16} />
+                <span className="text-sm font-medium">Logged for today</span>
+              </div>
+            )}
+          </>
         )}
+
         {!isActive && (
-          <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-            Ended
-          </span>
+          <p className="text-xs text-neutral-500 flex items-center gap-1">
+            <Calendar size={12} />
+            Ended on {endDate.toLocaleDateString()}
+          </p>
         )}
       </div>
-
-      {isActive && (
-        <>
-          <div className="mb-4">
-            <div className="flex justify-between text-sm text-gray-600 mb-2">
-              <span>Progress</span>
-              <span>{daysRemaining} days left</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-black h-2 rounded-full transition-all"
-                style={{ width: `${(daysPassed / totalDays) * 100}%` }}
-              />
-            </div>
-          </div>
-
-          {!hasLogged && (
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href = `/log?roomId=${room.id}`;
-              }}
-              className="w-full bg-black text-white py-2 rounded-lg font-medium hover:bg-gray-800 transition text-sm"
-            >
-              Log Today
-            </button>
-          )}
-        </>
-      )}
-
-      {!isActive && (
-        <p className="text-sm text-gray-600">
-          Ended on {endDate.toLocaleDateString()}
-        </p>
-      )}
     </Link>
   );
 }

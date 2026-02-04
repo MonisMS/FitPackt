@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { submitDailyLog } from './actions';
+import { Button, Modal, ModalFooter, Textarea, Input, Select } from '@/components/ui';
+import { Utensils, Dumbbell, Moon, Brain, Lock, CheckCircle } from 'lucide-react';
 
 type FormData = {
   breakfast: string;
@@ -91,98 +93,85 @@ export default function DailyLogForm({
           e.preventDefault();
           setShowConfirm(true);
         }}
-        className="bg-white rounded-lg shadow p-6 space-y-8"
+        className="bg-white rounded-lg shadow-md p-6 space-y-8"
       >
         {/* Food Section */}
-        <section>
-          <h2 className="text-xl font-bold mb-4">🥣 Food</h2>
+        <section className="animate-slide-up">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-neutral-100 rounded-lg">
+              <Utensils size={24} className="text-neutral-950" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-semibold text-neutral-950">Food</h2>
+              <p className="text-sm text-neutral-600">What did you eat today?</p>
+            </div>
+          </div>
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Breakfast
-              </label>
-              <textarea
-                value={data.breakfast}
-                onChange={(e) => updateData('breakfast', e.target.value)}
-                placeholder="e.g., 2 rotis, dal, sabzi, curd"
-                rows={2}
-                maxLength={300}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black resize-none"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                {data.breakfast.length}/300 characters
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Lunch
-              </label>
-              <textarea
-                value={data.lunch}
-                onChange={(e) => updateData('lunch', e.target.value)}
-                placeholder="e.g., rice, dal, chicken, salad"
-                rows={2}
-                maxLength={300}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black resize-none"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                {data.lunch.length}/300 characters
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Evening / Snacks
-              </label>
-              <textarea
-                value={data.eveningSnacks}
-                onChange={(e) => updateData('eveningSnacks', e.target.value)}
-                placeholder="e.g., tea, biscuits, fruits"
-                rows={2}
-                maxLength={300}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black resize-none"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                {data.eveningSnacks.length}/300 characters
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Dinner
-              </label>
-              <textarea
-                value={data.dinner}
-                onChange={(e) => updateData('dinner', e.target.value)}
-                placeholder="e.g., 3 rotis, paneer, dal, salad"
-                rows={2}
-                maxLength={300}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black resize-none"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                {data.dinner.length}/300 characters
-              </p>
-            </div>
+            <Textarea
+              label="Breakfast"
+              value={data.breakfast}
+              onChange={(e) => updateData('breakfast', e.target.value)}
+              placeholder="e.g., 2 rotis, dal, sabzi, curd"
+              rows={2}
+              maxLength={300}
+              showCharCount={true}
+            />
+            <Textarea
+              label="Lunch"
+              value={data.lunch}
+              onChange={(e) => updateData('lunch', e.target.value)}
+              placeholder="e.g., rice, dal, chicken, salad"
+              rows={2}
+              maxLength={300}
+              showCharCount={true}
+            />
+            <Textarea
+              label="Evening / Snacks"
+              value={data.eveningSnacks}
+              onChange={(e) => updateData('eveningSnacks', e.target.value)}
+              placeholder="e.g., tea, biscuits, fruits"
+              rows={2}
+              maxLength={300}
+              showCharCount={true}
+            />
+            <Textarea
+              label="Dinner"
+              value={data.dinner}
+              onChange={(e) => updateData('dinner', e.target.value)}
+              placeholder="e.g., 3 rotis, paneer, dal, salad"
+              rows={2}
+              maxLength={300}
+              showCharCount={true}
+            />
           </div>
         </section>
 
+        <div className="border-t border-neutral-200" />
+
         {/* Workout Section */}
         <section>
-          <h2 className="text-xl font-bold mb-4">🏋️ Workout</h2>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-neutral-100 rounded-lg">
+              <Dumbbell size={24} className="text-neutral-950" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-semibold text-neutral-950">Workout</h2>
+              <p className="text-sm text-neutral-600">Did you train today?</p>
+            </div>
+          </div>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Did you workout today? <span className="text-red-500">*</span>
+              <label className="block text-sm font-medium text-neutral-700 mb-3">
+                Did you workout today? <span className="text-red-600">*</span>
               </label>
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={() => updateData('workoutDone', true)}
-                  className={`flex-1 py-3 rounded-lg font-medium border-2 transition ${
+                  className={`flex-1 py-3 rounded-lg font-medium border-2 transition-all ${
                     data.workoutDone
-                      ? 'border-black bg-black text-white'
-                      : 'border-gray-300 hover:border-black'
+                      ? 'border-neutral-950 bg-neutral-950 text-white scale-105'
+                      : 'border-neutral-300 bg-white text-neutral-950 hover:border-neutral-950'
                   }`}
                 >
                   Yes
@@ -190,10 +179,10 @@ export default function DailyLogForm({
                 <button
                   type="button"
                   onClick={() => updateData('workoutDone', false)}
-                  className={`flex-1 py-3 rounded-lg font-medium border-2 transition ${
+                  className={`flex-1 py-3 rounded-lg font-medium border-2 transition-all ${
                     !data.workoutDone
-                      ? 'border-black bg-black text-white'
-                      : 'border-gray-300 hover:border-black'
+                      ? 'border-neutral-950 bg-neutral-950 text-white scale-105'
+                      : 'border-neutral-300 bg-white text-neutral-950 hover:border-neutral-950'
                   }`}
                 >
                   No
@@ -202,92 +191,88 @@ export default function DailyLogForm({
             </div>
 
             {data.workoutDone && (
-              <>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Type
-                  </label>
-                  <select
-                    value={data.workoutType}
-                    onChange={(e) => updateData('workoutType', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                  >
-                    <option value="">Select type</option>
-                    <option value="gym">Gym</option>
-                    <option value="walk">Walk</option>
-                    <option value="run">Run</option>
-                    <option value="rest">Rest / Light activity</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
+              <div className="space-y-4 animate-scale-in">
+                <Select
+                  label="Type"
+                  value={data.workoutType}
+                  onChange={(e) => updateData('workoutType', e.target.value)}
+                  options={[
+                    { value: '', label: 'Select type' },
+                    { value: 'gym', label: 'Gym' },
+                    { value: 'walk', label: 'Walk' },
+                    { value: 'run', label: 'Run' },
+                    { value: 'rest', label: 'Rest / Light activity' },
+                    { value: 'other', label: 'Other' },
+                  ]}
+                />
+
+                <Input
+                  label="Duration (minutes)"
+                  type="number"
+                  value={data.workoutDurationMinutes}
+                  onChange={(e) => updateData('workoutDurationMinutes', e.target.value)}
+                  placeholder="e.g., 45"
+                  min="0"
+                />
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Duration (minutes)
-                  </label>
-                  <input
-                    type="number"
-                    value={data.workoutDurationMinutes}
-                    onChange={(e) => updateData('workoutDurationMinutes', e.target.value)}
-                    placeholder="e.g., 45"
-                    min="0"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Intensity
-                  </label>
+                  <label className="block text-sm font-medium text-neutral-700 mb-3">Intensity</label>
                   <div className="flex gap-2">
                     {[1, 2, 3, 4, 5].map((level) => (
                       <button
                         key={level}
                         type="button"
                         onClick={() => updateData('workoutIntensity', level.toString())}
-                        className={`flex-1 py-3 rounded-lg font-medium border-2 transition ${
+                        className={`flex-1 py-3 rounded-lg font-medium border-2 transition-all ${
                           data.workoutIntensity === level.toString()
-                            ? 'border-black bg-black text-white'
-                            : 'border-gray-300 hover:border-black'
+                            ? 'border-neutral-950 bg-neutral-950 text-white scale-105'
+                            : 'border-neutral-300 bg-white text-neutral-950 hover:border-neutral-950'
                         }`}
                       >
                         {level}
                       </button>
                     ))}
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">
-                    1 = Very light, 5 = Very intense
-                  </p>
+                  <p className="text-xs text-neutral-500 mt-2">1 = Very light, 5 = Very intense</p>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </section>
 
+        <div className="border-t border-neutral-200" />
+
         {/* Body & Energy Section */}
         <section>
-          <h2 className="text-xl font-bold mb-4">😴 Body & Energy</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Sleep Hours <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                value={data.sleepHours}
-                onChange={(e) => updateData('sleepHours', e.target.value)}
-                placeholder="e.g., 7.5"
-                step="0.5"
-                min="0"
-                max="24"
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-              />
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-neutral-100 rounded-lg">
+              <Moon size={24} className="text-neutral-950" />
             </div>
+            <div>
+              <h2 className="text-2xl font-semibold text-neutral-950">Body & Energy</h2>
+              <p className="text-sm text-neutral-600">How are you feeling?</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <Input
+              label={
+                <>
+                  Sleep Hours <span className="text-red-600">*</span>
+                </>
+              }
+              type="number"
+              value={data.sleepHours}
+              onChange={(e) => updateData('sleepHours', e.target.value)}
+              placeholder="e.g., 7.5"
+              step="0.5"
+              min="0"
+              max="24"
+              required
+            />
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Energy Level <span className="text-red-500">*</span>
+              <label className="block text-sm font-medium text-neutral-700 mb-3">
+                Energy Level <span className="text-red-600">*</span>
               </label>
               <div className="flex gap-2">
                 {[1, 2, 3, 4, 5].map((level) => (
@@ -295,101 +280,112 @@ export default function DailyLogForm({
                     key={level}
                     type="button"
                     onClick={() => updateData('energyLevel', level.toString())}
-                    className={`flex-1 py-3 rounded-lg font-medium border-2 transition ${
+                    className={`flex-1 py-3 rounded-lg font-medium border-2 transition-all ${
                       data.energyLevel === level.toString()
-                        ? 'border-black bg-black text-white'
-                        : 'border-gray-300 hover:border-black'
+                        ? 'border-neutral-950 bg-neutral-950 text-white scale-105'
+                        : 'border-neutral-300 bg-white text-neutral-950 hover:border-neutral-950'
                     }`}
                   >
                     {level}
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-gray-500 mt-2">
-                1 = Very low, 5 = Very high
-              </p>
+              <p className="text-xs text-neutral-500 mt-2">1 = Very low, 5 = Very high</p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Weight (kg) - Optional
-              </label>
-              <input
-                type="number"
-                value={data.weightKg}
-                onChange={(e) => updateData('weightKg', e.target.value)}
-                placeholder="e.g., 70.5"
-                step="0.1"
-                min="0"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-              />
-            </div>
+            <Input
+              label="Weight (kg) - Optional"
+              type="number"
+              value={data.weightKg}
+              onChange={(e) => updateData('weightKg', e.target.value)}
+              placeholder="e.g., 70.5"
+              step="0.1"
+              min="0"
+            />
           </div>
         </section>
+
+        <div className="border-t border-neutral-200" />
 
         {/* Note Section */}
         <section>
-          <h2 className="text-xl font-bold mb-4">🧠 Note</h2>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Optional honest reflection
-            </label>
-            <textarea
-              value={data.note}
-              onChange={(e) => updateData('note', e.target.value)}
-              placeholder="How did today go? Any challenges or wins?"
-              rows={3}
-              maxLength={200}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black resize-none"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              {data.note.length}/200 characters
-            </p>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-neutral-100 rounded-lg">
+              <Brain size={24} className="text-neutral-950" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-semibold text-neutral-950">Note</h2>
+              <p className="text-sm text-neutral-600">Optional honest reflection</p>
+            </div>
           </div>
+          <Textarea
+            label="How did today go?"
+            value={data.note}
+            onChange={(e) => updateData('note', e.target.value)}
+            placeholder="Any challenges or wins? How are you feeling?"
+            rows={3}
+            maxLength={200}
+            showCharCount={true}
+          />
         </section>
 
         {/* Submit */}
-        <div className="pt-4 border-t">
-          <button
+        <div className="pt-4 border-t border-neutral-200">
+          <Button
             type="submit"
+            variant="primary"
+            size="lg"
+            fullWidth
             disabled={!canSubmit}
-            className="w-full bg-black text-white py-4 rounded-lg font-medium disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-gray-800 transition"
           >
+            <Lock size={20} />
             Submit & Lock
-          </button>
-          <p className="text-sm text-gray-500 text-center mt-3">
+          </Button>
+          <p className="text-xs text-neutral-500 text-center mt-3">
             Once submitted, you cannot edit this log
           </p>
         </div>
       </form>
 
       {/* Confirmation Modal */}
-      {showConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-xl font-bold mb-4">Confirm Submission</h3>
-            <p className="text-gray-600 mb-6">
-              You're about to submit your log for today. Once submitted, you cannot edit or delete it. Are you sure?
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowConfirm(false)}
-                disabled={loading}
-                className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="flex-1 bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition"
-              >
-                {loading ? 'Submitting...' : 'Yes, Submit'}
-              </button>
+      <Modal
+        isOpen={showConfirm}
+        onClose={() => !loading && setShowConfirm(false)}
+        title="Confirm Submission"
+        size="md"
+      >
+        <div className="space-y-4">
+          <p className="text-neutral-600">
+            You're about to submit your log for today. Once submitted, you cannot edit or delete it.
+          </p>
+          <div className="bg-neutral-50 p-4 rounded-lg border border-neutral-200">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle size={18} className="text-green-600" />
+              <span className="text-sm font-medium text-neutral-950">This is permanent</span>
             </div>
+            <p className="text-xs text-neutral-600">
+              Your accountability partners will see this log. Make sure everything is accurate.
+            </p>
           </div>
         </div>
-      )}
+        <ModalFooter>
+          <Button
+            variant="secondary"
+            onClick={() => setShowConfirm(false)}
+            disabled={loading}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleSubmit}
+            disabled={loading}
+            loading={loading}
+          >
+            Yes, Submit
+          </Button>
+        </ModalFooter>
+      </Modal>
     </>
   );
 }
